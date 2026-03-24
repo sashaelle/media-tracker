@@ -1,7 +1,7 @@
 import pandas as pd
 import sqlite3 as sql
 
-def load_data():
+def netflix_table():
     #In this cell, we load the data.
     try:
         #load the csv data from github
