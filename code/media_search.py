@@ -8,6 +8,7 @@ def search(title):
         SELECT * 
         FROM netflix
         WHERE title LIKE ?
+        ORDER BY release_year DESC
         """, 
         (f"%{title}%",)
         )
