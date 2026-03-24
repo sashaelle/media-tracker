@@ -1,4 +1,7 @@
-from database import load_data
+from database import load_data, tracker_table
 
-data = load_data()
-print(data.head()) # show the first few rows
+load_data() # load the data into the database
+tracker_table() # create the tracker table if it doesn't exist
+
+print("Data loaded and tracker table created (if it didn't exist).")
+
