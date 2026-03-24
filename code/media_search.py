@@ -5,12 +5,13 @@ def search(title):
     cursor = conn.cursor()
     cursor.execute(
         """
-        SELECT * 
+        SELECT title, release_year
         FROM netflix
         WHERE title LIKE ?
         ORDER BY release_year DESC
+        LIMIT 10
         """, 
-        (f"%{title}%",)
+        (f"% {title} %",)
         )
     
     results = cursor.fetchall()

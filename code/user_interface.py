@@ -1,4 +1,5 @@
 from tkinter import *
+from media_search import search
 root = Tk()
 root.title("Personal Media Tracker")
 
@@ -9,8 +10,12 @@ welcomeLabel = Label(root, text="Welcome to Personal Media Tracker")
 welcomeLabel.pack(anchor="center")
 
 #-----------------Search Feature Frame------------------#
-def search():
-    userSearchedTitle = searchBoxVar.get()
+def query():
+    userSearchedTitle = searchTextField.get()
+    print(f"Searching for... {userSearchedTitle}")  # Debugging print statement
+    for row in search(userSearchedTitle):
+        print(row)
+    print("Search Complete\n")
 
 searchFrame = Frame(root, width=1000, height=100)
 searchFrame.pack(padx=20, pady=20)
@@ -20,7 +25,7 @@ searchTextField = Entry(searchFrame, width=30,textvariable=searchBoxVar, text="E
 searchTextField.pack(in_=searchFrame, pady=20, side=LEFT)
 
 
-searchButton = Button(searchFrame, text="Search")
+searchButton = Button(searchFrame, text="Search", command=query)
 searchButton.pack(in_=searchFrame, side=RIGHT)
 
 root.mainloop()
