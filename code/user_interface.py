@@ -1,5 +1,6 @@
 from tkinter import *
 from media_search import search
+
 root = Tk()
 root.title("Personal Media Tracker")
 
@@ -15,6 +16,7 @@ def query():
     print(f"Searching for... {userSearchedTitle}")  # Debugging print statement
     for row in search(userSearchedTitle):
         print(row)
+        listbox.insert(END, row)
     print("Search Complete\n")
 
 searchFrame = Frame(root, width=1000, height=100)
@@ -27,5 +29,22 @@ searchTextField.pack(in_=searchFrame, pady=20, side=LEFT)
 
 searchButton = Button(searchFrame, text="Search", command=query)
 searchButton.pack(in_=searchFrame, side=RIGHT)
+
+#-----------------Results Frame------------------#
+# create listbox object
+listbox = Listbox(root, height = 10, 
+                  width = 50, 
+                  #bg = "grey",
+                  activestyle = 'dotbox', 
+                  #font = "Helvetica",
+                  #fg = "yellow"
+                  )
+
+# Define a label for the list.  
+label = Label(root, text = "Search Results") 
+
+# pack the widgets
+label.pack()
+listbox.pack()
 
 root.mainloop()
