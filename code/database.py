@@ -47,7 +47,7 @@ def tracker_table():
     except ValueError:
         print("""Table already exists or another ValueError occurred.""")
 
-#------------------------Database Connection------------------------#
+#------------------------Database Creation------------------------#
 netflix_table() # load the data into the database
 tracker_table() # create the tracker table if it doesn't exist
 
