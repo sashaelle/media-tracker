@@ -1,4 +1,5 @@
 import sqlite3 as sql
+import pandas as pd
 
 def netflix_table():
     #In this cell, we load the data.
@@ -30,8 +31,8 @@ def tracker_table():
 
         #Create a table to track the media that we have watched.
         cursor.execute("""CREATE TABLE IF NOT EXISTS tracker (
-                            tracker_id INTEGER PRIMARY KEY,
-                            media_id INTEGER,
+                            tracker_id TEXT,
+                            media_id TEXT PRIMARY KEY,
                             title TEXT,
                             status TEXT,
                             rating REAL,
@@ -45,3 +46,9 @@ def tracker_table():
     
     except ValueError:
         print("""Table already exists or another ValueError occurred.""")
+
+#------------------------Database Connection------------------------#
+netflix_table() # load the data into the database
+tracker_table() # create the tracker table if it doesn't exist
+
+print("Data loaded and tracker table created (if it didn't exist).")
