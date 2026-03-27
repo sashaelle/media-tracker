@@ -116,11 +116,11 @@ def open_title_window():
         Button(ratingFrame, text=str(i), borderwidth=3, relief="raised", padx=5, pady=10, command=lambda v=i: set_rating(v)).grid(row=1, column=i-1, padx=10)
 
     #Positioning the widgets inside Rating Frame
-    ratingLabel.grid(row=1, column=0, padx=10)
+    ratingLabel.grid(row=0, column=0, padx=10)
 
 #--------------------------------------------------Review Feature Frame----------------------------------------------------------#
-    reviewFrame = Frame(title_window, width=1000, height=100)
-    reviewFrame.grid(row=2, column=0, padx=10, pady=10)
+    reviewFrame = Frame(title_window, width=1000, height=400)
+    reviewFrame.grid(row=3, column=0, padx=10, pady=10)
     reviewFrame.grid_propagate(False)
 
     #Saved user input for review
@@ -139,9 +139,9 @@ def open_title_window():
     submitReviewButton = Button(reviewFrame, text="Submit Review", command=submit_review)
 
     #Positioning the widgets inside Rating Frame
-    reviewLabel.grid(row=0, column=0, padx=10)
-    reviewTextField.grid(row=1, column=0, padx=10)
-    submitReviewButton.grid(row=1, column=1, padx=10)
+    reviewLabel.grid(row=3, column=0, padx=10)
+    reviewTextField.grid(row=4, column=0, padx=10)
+    submitReviewButton.grid(row=5, column=0, padx=10)
     
 
 #Rating variable and function
