@@ -47,8 +47,28 @@ def tracker_table():
     except ValueError:
         print("""Table already exists or another ValueError occurred.""")
 
+def account_table():
+    try:
+        print("Creating accounts table if it doesn't exist...")
+        #Connect to a database
+        conn = sql.connect('media_tracker.db')
+        cursor = conn.cursor()
+
+        #Create a table to track the media that we have watched.
+        cursor.execute("""CREATE TABLE IF NOT EXISTS account (
+                            account_id TEXT PRIMARY KEY,
+                            name TEXT
+                        )""")
+        conn.commit()
+        conn.close()
+        print("Accounts table created (if it didn't exist).")
+    
+    except ValueError:
+        print("""Table already exists or another ValueError occurred.""")
+
 #------------------------Database Creation------------------------#
 netflix_table() # load the data into the database
 tracker_table() # create the tracker table if it doesn't exist
+account_table() # create the accounts table if it doesn't exist
 
 print("Data loaded and tracker table created (if it didn't exist).")
