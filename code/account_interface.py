@@ -59,7 +59,9 @@ createProfileBtn = Button(profileFrame,
                           command=profile_form,
                           wraplength=50,
                           width = 10,
-                          height = 5)
+                          height = 5,
+                          activebackground="lightblue",
+                          background="lightgrey")
 createProfileBtn.grid(row=1, column=1, padx=12)
 
 root.mainloop()
