@@ -1,6 +1,8 @@
 import sqlite3 as sql
 import pandas as pd
 
+#this is a comment
+
 def netflix_table():
     #In this cell, we load the data.
     try:
