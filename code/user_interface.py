@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter.ttk import Combobox
 from media_search import search
+from sort_filter import get_filtered_media
 
 #---------------------------------------------------------Set Up---------------------------------------------------------------#
 root = Tk()
@@ -15,26 +16,46 @@ welcomeLabel.pack(padx=10,pady=10,anchor="center")
 #--------------------------------------------------Search Feature Frame--------------------------------------------------------#
 #Search for title from database and display results in listbox
 def query():
+    listbox.delete(0, END)
     userSearchedTitle = searchTextField.get()
+    selectedType = typeFilterVar.get()
+    selectedSort = sortFilterVar.get()
+    
     print(f"Searching for... {userSearchedTitle}")  # Debugging print statement
-    for row in search(userSearchedTitle):
-        print(row)
-        listbox.insert(END, row)
+    
+    results = get_filtered_media(
+        title=userSearchedTitle if userSearchedTitle else None,
+        media_type=selectedType if selectedType != "All" else None,
+        sort_by=selectedSort
+    )
+    for row in results:
+        display_text = f"{row[0]} ({row[1]}) - {row[2]}"
+        listbox.insert(END, display_text)
     print("Search Complete\n")
 
 searchFrame = Frame(root, width=1000, height=100)
 
-#Variable for search box
+#Variable for search box and filter box
 searchBoxVar = StringVar()
+typeFilterVar = StringVar(value="All")
+sortFilterVar = StringVar(value="Newest")
 
 #Widgets for search feature
 searchTextField = Entry(searchFrame, width=30,textvariable=searchBoxVar, text="Enter Title or Keyword")
 searchButton = Button(searchFrame, text="Search", command=query)
 
+#Widgets for sort and filter feature
+typeCombo = Combobox(searchFrame, textvariable=typeFilterVar, width=10, state="readonly")
+typeCombo['values'] = ("All", "Movie", "TV Show")
+sortCombo = Combobox(searchFrame, textvariable=sortFilterVar, width=10, state="readonly")
+sortCombo['values'] = ("Newest", "Oldest", "A-Z")
+
 #Positioning the widgets
 searchFrame.pack(padx=10,pady=10,anchor="center")
-searchTextField.grid(row=1, column=0)
-searchButton.grid(row=1, column=1, padx=10)
+searchTextField.grid(row=1, column=0, padx=5)
+typeCombo.grid(row=1, column=1, padx=5)
+sortCombo.grid(row=1, column=2, padx=5)
+searchButton.grid(row=1, column=3, padx=10)
 
 #-------------------------------------------------Search Results Frame----------------------------------------------------------#
 #Selecting an item from the listbox
@@ -116,11 +137,11 @@ def open_title_window():
         Button(ratingFrame, text=str(i), borderwidth=3, relief="raised", padx=5, pady=10, command=lambda v=i: set_rating(v)).grid(row=1, column=i-1, padx=10)
 
     #Positioning the widgets inside Rating Frame
-    ratingLabel.grid(row=0, column=0, padx=10)
+    ratingLabel.grid(row=1, column=0, padx=10)
 
 #--------------------------------------------------Review Feature Frame----------------------------------------------------------#
-    reviewFrame = Frame(title_window, width=1000, height=400)
-    reviewFrame.grid(row=3, column=0, padx=10, pady=10)
+    reviewFrame = Frame(title_window, width=1000, height=100)
+    reviewFrame.grid(row=2, column=0, padx=10, pady=10)
     reviewFrame.grid_propagate(False)
 
     #Saved user input for review
@@ -139,9 +160,9 @@ def open_title_window():
     submitReviewButton = Button(reviewFrame, text="Submit Review", command=submit_review)
 
     #Positioning the widgets inside Rating Frame
-    reviewLabel.grid(row=3, column=0, padx=10)
-    reviewTextField.grid(row=4, column=0, padx=10)
-    submitReviewButton.grid(row=5, column=0, padx=10)
+    reviewLabel.grid(row=0, column=0, padx=10)
+    reviewTextField.grid(row=1, column=0, padx=10)
+    submitReviewButton.grid(row=1, column=1, padx=10)
     
 
 #Rating variable and function
