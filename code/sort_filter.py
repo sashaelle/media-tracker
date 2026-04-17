@@ -12,7 +12,7 @@ def get_filtered_media(title=None, media_type=None, sort_by="newest", limit=15):
     )
 
     # Base Query
-    query = "SELECT title, release_year, type FROM netflix WHERE 1=1"
+    query = "SELECT title, release_year, type, show_id FROM netflix WHERE 1=1"
     params = []
 
     # Apply Filters
