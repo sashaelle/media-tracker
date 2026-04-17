@@ -47,7 +47,7 @@ def open_title_window(title, release_year, profile_window, profile_name):
         
     #--------------------------------------------------Rating Feature Frame----------------------------------------------------------#
     ratingFrame = Frame(title_window, width=1000, height=100)
-    ratingFrame.grid(row=2, column=0, padx=10, pady=10)
+    ratingFrame.grid(row=2, column=0, padx=10, pady=1)
     ratingFrame.grid_propagate(False)
 
     # Saved value for rating
@@ -76,22 +76,52 @@ def open_title_window(title, release_year, profile_window, profile_name):
                                         column=int(value)-1, 
                                         padx=5)
         
+    
     #Positioning the widgets inside Rating Frame
     ratingLabel.grid(row=0, column=0, padx=10)
+    
+    #--------------------------------------------Rating Description Feature Frame----------------------------------------------------#
+    ratingDescriptionFrame = Frame(title_window, width=1000, height=100)
+    ratingDescriptionFrame.grid(row=3, column=0, padx=10, pady=10)
+    ratingDescriptionFrame.grid_propagate(False)
+
+    ratingDescriptionLabel = Label(ratingDescriptionFrame, text="(Hint: Scale of 1-5, with 1 being the lowest and 5 being the highest)")
+    ratingDescriptionLabel.grid(row=0, column=0, padx=10)
 
     #--------------------------------------------------Review Feature Frame----------------------------------------------------------#
     reviewFrame = Frame(title_window, width=1000, height=400)
-    reviewFrame.grid(row=3, column=0, padx=10, pady=10)
+    reviewFrame.grid(row=4, column=0, padx=10, pady=10)
     reviewFrame.grid_propagate(False)
 
     #Saved user input for review
     saved_review = StringVar()
     saved_review.set("")
 
+    #Default text for review text field
+    placeholder = "Write your review here..."
+
     #Widgets for review frame
     reviewLabel = Label(reviewFrame, text="Review:", font=("Arial", 12))
     reviewTextField = Text(reviewFrame, width=50, height=10)
+    reviewTextField.insert("1.0", placeholder)
 
+
+    #Function to clear the default text when the text field is clicked
+    def on_focus_in(event):
+        if reviewTextField.get("1.0", "end-1c") == placeholder:
+            reviewTextField.delete("1.0", "end")
+
+    #Function to return the default text if the user clicks out of the text field without writing a review
+    def on_focus_out(event):
+        if reviewTextField.get("1.0", "end-1c").strip() == "":
+            reviewTextField.insert("1.0", placeholder)
+
+    #Calling the functions to clear and return the placeholder text
+    reviewTextField.bind("<FocusIn>", on_focus_in)
+    reviewTextField.bind("<FocusOut>", on_focus_out)
+
+
+    #Function to save all the user input from the title details window and save it to the account specific tracker database
     def save_entry():
         # Get review text
         review = reviewTextField.get("1.0", END).strip()
@@ -107,12 +137,13 @@ def open_title_window(title, release_year, profile_window, profile_name):
         track_title(profile_name, media_ID, title, status, rating, review)
 
         print("Saved everything to database!")
+ 
 
     #Positioning the widgets inside Rating Frame
-    reviewLabel.grid(row=3, column=0, padx=10)
-    reviewTextField.grid(row=4, column=0, padx=10)
+    reviewLabel.grid(row=0, column=0, padx=10)
+    reviewTextField.grid(row=1, column=0, padx=10)
     submitButton = Button(reviewFrame, text="Save Entry", command=save_entry)
-    submitButton.grid(row=5, column=0, padx=10)
+    submitButton.grid(row=2, column=0, padx=10)
         
     
 
