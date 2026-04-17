@@ -12,13 +12,13 @@ def open_profile_window(profile_name):
     profile_window.geometry("1000x900")
 
     #Welcome Header
-    welcomeLabel = Label(profile_window, text="Welcome to Personal Media Tracker")
+    welcomeLabel = Label(profile_window, text=f"Welcome, {profile_name}!")
     welcomeLabel.pack(padx=10,pady=10,anchor="center")
 
     #--------------------------------------------------Search Feature Frame--------------------------------------------------------#
     #Search for title from database and display results in listbox
     def query():
-        listbox.delete(0, END)
+        searchListbox.delete(0, END)
         userSearchedTitle = searchTextField.get()
         selectedType = typeFilterVar.get()
         selectedSort = sortFilterVar.get()
@@ -32,7 +32,7 @@ def open_profile_window(profile_name):
         )
         for row in results:
             display_text = f"{row[0]} ({row[1]}) - {row[2]}"
-            listbox.insert(END, display_text)
+            searchListbox.insert(END, display_text)
         print("Search Complete\n")
 
     searchFrame = Frame(profile_window, width=1000, height=100)
@@ -61,17 +61,19 @@ def open_profile_window(profile_name):
 
     #-------------------------------------------------Search Results Frame----------------------------------------------------------#
     #Selecting an item from the listbox
-    def on_select(event):
+    def on_search_select(event):
         widget = event.widget
         selection = widget.curselection()
 
         if selection:
             index = selection[0]
             data = widget.get(index)
-            print(f"You selected: {data}'")
 
-            title_part = title_part = data.split(" - ")[0]
-            title = data.split(" - ")[0]
+            print(f"You selected (search): {data}")
+
+            title_part = data.split(" - ")[0]
+            title = title_part.split("(")[0].strip()
+
             release_year = title_part.split("(")[1].split(")")[0]
 
             open_title_window(title, release_year, profile_window)
@@ -80,7 +82,7 @@ def open_profile_window(profile_name):
 
     #Widgets for Search Results Frame
     searchResultsLabel = Label(searchResultsFrame, text = "Search Results:") 
-    listbox = Listbox(searchResultsFrame, height = 10, 
+    searchListbox = Listbox(searchResultsFrame, height = 10, 
                     width = 100, 
                     #bg = "grey",
                     activestyle = 'dotbox', 
@@ -88,9 +90,33 @@ def open_profile_window(profile_name):
                     #fg = "yellow"
                     )
 
-    listbox.bind("<<ListboxSelect>>", on_select)
+    searchListbox.bind("<<ListboxSelect>>", on_search_select)
 
-    # pack the widgets
+    # Format the widgets
     searchResultsFrame.pack(padx=10,pady=10,anchor="center")
     searchResultsLabel.grid(row=2, column=1)
-    listbox.grid(row=3, column=1, columnspan=23, padx=10, sticky="snew")
+    searchListbox.grid(row=3, column=1, columnspan=23, padx=10, sticky="snew")
+
+    #-------------------------------------------------Account Tracked Title Frame----------------------------------------------------------#
+    def on_account_select(event):
+        widget = event.widget
+        selection = widget.curselection()
+
+        if selection:
+            index = selection[0]
+            data = widget.get(index)
+
+            print(f"You selected (account): {data}")
+
+
+    trackedTitleFrame = Frame(profile_window, width=1000, height=100)
+
+    accountTitleLabel = Label(trackedTitleFrame, text="Your Tracked Titles:")
+
+    accountListbox = Listbox(trackedTitleFrame, height=10, width=100)
+    accountListbox.bind("<<ListboxSelect>>", on_account_select)
+
+    trackedTitleFrame.pack(padx=10, pady=10, anchor="center")
+
+    accountTitleLabel.grid(row=2, column=1)
+    accountListbox.grid(row=3, column=1, columnspan=23, padx=10, sticky="snew")

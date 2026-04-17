@@ -51,21 +51,33 @@ def open_title_window(title, release_year, profile_window):
     ratingFrame.grid_propagate(False)
 
     # Saved value for rating
-    saved_rating = IntVar()
-    saved_rating.set(0)
+    saved_rating = StringVar(ratingFrame, "1")
+    saved_rating.set("0")
 
     #Function to set the rating when a button is clicked
     def set_rating(rating):
         saved_rating.set(rating)
         print(f"Rating set to: {saved_rating.get()}") #checking if the rating is being set correctly
 
-    #Widgets for title details window 
-    ratingLabel = Label(ratingFrame, text="Rating: ", font=("Arial", 12))                
-    for i in range(1, 6):
-        Button(ratingFrame, text=str(i), borderwidth=3, relief="raised", padx=5, pady=10, command=lambda v=i: set_rating(v)).grid(row=1, column=i-1, padx=10)
-
+    #Rating widgets
+    ratingLabel = Label(ratingFrame, text="Rating: ", font=("Arial", 12))           
+    values = {"1 Star": "1", 
+              "2 Stars": "2", 
+              "3 Stars": "3", 
+              "4 Stars": "4", 
+              "5 Stars": "5"}
+    
+    for (text, value) in values.items():
+        Radiobutton(ratingFrame, 
+                    text = text, 
+                    variable = saved_rating, 
+                    value = value, 
+                    indicator = 0).grid(row=1, 
+                                        column=int(value)-1, 
+                                        padx=5)
+        
     #Positioning the widgets inside Rating Frame
-    ratingLabel.grid(row=2, column=0, padx=10)
+    ratingLabel.grid(row=0, column=0, padx=10)
 
     #--------------------------------------------------Review Feature Frame----------------------------------------------------------#
     reviewFrame = Frame(title_window, width=1000, height=400)
@@ -106,7 +118,7 @@ def open_title_window(title, release_year, profile_window):
 
     #Rating variable and function
     count = 0
-    ans = StringVar(profile_window)
+    ans = StringVar(ratingFrame)
     ans.set("Unrated")
     increments = 0
 
