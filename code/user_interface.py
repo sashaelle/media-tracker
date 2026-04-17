@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.ttk import Combobox
+from tracked_title import get_tracked_titles
 from media_search import search
 from sort_filter import get_filtered_media
 from open_title_window import open_title_window
@@ -76,7 +77,7 @@ def open_profile_window(profile_name):
 
             release_year = title_part.split("(")[1].split(")")[0]
 
-            open_title_window(title, release_year, profile_window)
+            open_title_window(title, release_year, profile_window, profile_name)
 
     searchResultsFrame = Frame(profile_window, width=1000, height=100)
 
@@ -106,7 +107,13 @@ def open_profile_window(profile_name):
             index = selection[0]
             data = widget.get(index)
 
-            print(f"You selected (account): {data}")
+            print(f"You selected {profile_name}: {data}")
+
+    def load_titles(profile):
+        tracked_titles = get_tracked_titles(profile)
+        accountListbox.delete(0, END)
+        for title in tracked_titles:
+            accountListbox.insert(END, title)
 
 
     trackedTitleFrame = Frame(profile_window, width=1000, height=100)
@@ -116,7 +123,14 @@ def open_profile_window(profile_name):
     accountListbox = Listbox(trackedTitleFrame, height=10, width=100)
     accountListbox.bind("<<ListboxSelect>>", on_account_select)
 
+    refreshButton = Button(
+        trackedTitleFrame,
+        text="Refresh",
+        command=lambda: load_titles(profile_name)
+    )
+
     trackedTitleFrame.pack(padx=10, pady=10, anchor="center")
 
     accountTitleLabel.grid(row=2, column=1)
     accountListbox.grid(row=3, column=1, columnspan=23, padx=10, sticky="snew")
+    refreshButton.grid(row=4, column=1, pady=10)

@@ -4,7 +4,7 @@ from media_search import search
 from sort_filter import get_filtered_media
 from tracked_title import track_title
     
-def open_title_window(title, release_year, profile_window):                
+def open_title_window(title, release_year, profile_window, profile_name):                
     title_window = Toplevel(profile_window)
     title_window.title("Title Details")
     title_window.geometry("1000x900")
@@ -104,7 +104,7 @@ def open_title_window(title, release_year, profile_window):
         media_ID = title  
 
         # Save to database
-        track_title(media_ID, title, status, rating, review)
+        track_title(profile_name, media_ID, title, status, rating, review)
 
         print("Saved everything to database!")
 
