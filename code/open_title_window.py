@@ -1,7 +1,5 @@
 from tkinter import *
 from tkinter.ttk import Combobox
-from media_search import search
-from sort_filter import get_filtered_media
 from tracked_title import track_title
     
 def open_title_window(title, release_year, media_id, profile_window, profile_name, media_type):                
