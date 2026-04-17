@@ -4,7 +4,7 @@ from media_search import search
 from sort_filter import get_filtered_media
 from tracked_title import track_title
     
-def open_title_window(title, release_year, profile_window, profile_name):                
+def open_title_window(title, release_year, media_id, profile_window, profile_name, media_type):                
     title_window = Toplevel(profile_window)
     title_window.title("Title Details")
     title_window.geometry("1000x900")
@@ -131,10 +131,8 @@ def open_title_window(title, release_year, profile_window, profile_name):
         status = trackingComboBoxVar.get()
         rating = saved_rating.get()
 
-        media_ID = title  
-
         # Save to database
-        track_title(profile_name, media_ID, title, status, rating, review)
+        track_title(profile_name, media_id, title, status, rating, review, media_type)
 
         print("Saved everything to database!")
  
