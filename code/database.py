@@ -33,15 +33,17 @@ def tracker_table():
 
         #Create a table to track the media that we have watched.
         cursor.execute("""CREATE TABLE IF NOT EXISTS tracker (
-                            tracker_id TEXT,
-                            media_id TEXT PRIMARY KEY,
-                            title TEXT,
+                            tracker_id TEXT PRIMARY KEY,
+                            profile TEXT NOT NULL,
+                            media_id TEXT NOT NULL,
+                            title TEXT NOT NULL,
                             status TEXT,
-                            rating REAL,
+                            rating INTEGER,
                             review TEXT,
                             media_type TEXT,
-                            date_added DATE
-                        )""")
+                            date_added DATE,
+                            UNIQUE(profile, media_id)
+                       )""")
         conn.commit()
         conn.close()
         print("Tracker table created (if it didn't exist).")
