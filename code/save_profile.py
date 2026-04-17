@@ -8,7 +8,7 @@ def save_profile(name):
     new_uuid = str(uuid.uuid4())
 
     account = """
-                INSERT INTO accounts (account_id, name)
+                INSERT INTO account (account_id, name)
                 VALUES (?, ?)
                 ON CONFLICT (account_id)
                 DO UPDATE SET
