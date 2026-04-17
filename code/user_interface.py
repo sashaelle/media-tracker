@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter.ttk import Combobox
 from tracked_title import get_tracked_titles
-from media_search import search
 from sort_filter import get_filtered_media
 from open_title_window import open_title_window
 
@@ -17,12 +16,19 @@ def open_profile_window(profile_name):
     welcomeLabel.pack(padx=10,pady=10,anchor="center")
 
     #--------------------------------------------------Search Feature Frame--------------------------------------------------------#
+    search_results = [] # Store search results for later use
+    
     #Search for title from database and display results in listbox
     def query():
         searchListbox.delete(0, END)
+
+        nonlocal search_results # Declare search_results as nonlocal to modify it within the function
+        search_results.clear() # Clear previous search results
+
         userSearchedTitle = searchTextField.get()
         selectedType = typeFilterVar.get()
         selectedSort = sortFilterVar.get()
+
         
         print(f"Searching for... {userSearchedTitle}")  # Debugging print statement
         
@@ -31,6 +37,9 @@ def open_profile_window(profile_name):
             media_type=selectedType if selectedType != "All" else None,
             sort_by=selectedSort
         )
+
+        search_results = results # Store results for later use
+
         for row in results:
             display_text = f"{row[0]} ({row[1]}) - {row[2]}"
             searchListbox.insert(END, display_text)
@@ -68,17 +77,16 @@ def open_profile_window(profile_name):
 
         if selection:
             index = selection[0]
-            data = widget.get(index)
+            row =  search_results[index]  # Get the corresponding row from search results
 
-            print(f"You selected (search): {data}")
+            print(f"You selected (search): {row[0]}")  # Debugging print statement
+           
+            title = row[0]
+            release_year = row[1]
+            media_id = row[3]
+            media_type = row[2]
 
-            title_part = data.split(" - ")[0]
-            title = title_part.split("(")[0].strip()
-
-            release_year = title_part.split("(")[1].split(")")[0]
-            media_id = data
-
-            open_title_window(title, release_year, media_id, profile_window, profile_name)
+            open_title_window(title, release_year, media_id, profile_window, profile_name, media_type)
 
     searchResultsFrame = Frame(profile_window, width=1000, height=100)
 
