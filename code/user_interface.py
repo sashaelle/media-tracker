@@ -76,8 +76,9 @@ def open_profile_window(profile_name):
             title = title_part.split("(")[0].strip()
 
             release_year = title_part.split("(")[1].split(")")[0]
+            media_id = data
 
-            open_title_window(title, release_year, profile_window, profile_name)
+            open_title_window(title, release_year, media_id, profile_window, profile_name)
 
     searchResultsFrame = Frame(profile_window, width=1000, height=100)
 
