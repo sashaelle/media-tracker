@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+from save_profile import save_profile
 from user_interface import open_profile_window
 
 root = Tk()
@@ -24,6 +25,7 @@ def create_profile(profile_name):
 
     col_position = len(profiles)
     new_button.grid(row=1, column=col_position, padx=12)
+    save_profile(profile_name)
 
     if len(profiles) == MAX_PROFILES:
         createProfileBtn.destroy()
