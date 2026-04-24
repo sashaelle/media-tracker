@@ -38,11 +38,10 @@ The docstring must contain:
 Example:
 
     """
-    Searches the media catalog for titles that match the user input.
-
+    Function name: search()
+    Purpose: Searches the media catalog for titles that match the user input.
     Args:
         title (str): The title entered by the user.
-
     Returns:
         list: A list of matching media records.
 
