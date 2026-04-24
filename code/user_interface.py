@@ -1,8 +1,9 @@
 from tkinter import *
 from tkinter.ttk import Combobox
-from tracked_title import get_tracked_titles
+from tracked_title import get_tracked_titles, modify_tracked_title
 from sort_filter import get_filtered_media
 from open_title_window import open_title_window
+from export_data import export_tracked_titles
 
 def open_profile_window(profile_name):
     #---------------------------------------------------------Set Up---------------------------------------------------------------#
@@ -86,7 +87,21 @@ def open_profile_window(profile_name):
             media_id = row[3]
             media_type = row[2]
 
-            open_title_window(title, release_year, media_id, profile_window, profile_name, media_type)
+            profile_window.withdraw()
+
+            title_window = open_title_window(
+                title,
+                release_year,
+                media_id,
+                profile_window,
+                profile_name,
+                media_type
+            )
+
+            profile_window.wait_window(title_window)
+
+            profile_window.deiconify()
+            load_titles(profile_name)
 
     searchResultsFrame = Frame(profile_window, width=1000, height=100)
 
@@ -114,16 +129,40 @@ def open_profile_window(profile_name):
 
         if selection:
             index = selection[0]
-            data = widget.get(index)
+            selected_media_id = widget.media_map[index]
 
-            print(f"You selected {profile_name}: {data}")
+            print(f"You selected {profile_name}: {selected_media_id}")
+
+            entry = modify_tracked_title(profile_name, selected_media_id)
+
+            if entry:
+                profile_window.withdraw()  # 👈 hide profile/search window
+
+                title_window = open_title_window(
+                    entry["title"],
+                    entry["release_year"],
+                    entry["media_id"],
+                    profile_window,
+                    profile_name,
+                    entry["media_type"],
+                    entry
+                )
+
+                profile_window.wait_window(title_window)  
+
+                profile_window.deiconify()  
+                load_titles(profile_name)  
 
     def load_titles(profile):
-        tracked_titles = get_tracked_titles(profile)
+        accountListbox.media_map.clear()
         accountListbox.delete(0, END)
-        for title in tracked_titles:
-            accountListbox.insert(END, title)
 
+        titles = get_tracked_titles(profile)
+
+        for i, row in enumerate(titles):
+            display = f"{row['title']} ({row['release_year']}) - {row['status']}"
+            accountListbox.insert(END, display)
+            accountListbox.media_map[i] = row["media_id"]
 
     trackedTitleFrame = Frame(profile_window, width=1000, height=100)
 
@@ -131,6 +170,7 @@ def open_profile_window(profile_name):
 
     accountListbox = Listbox(trackedTitleFrame, height=10, width=100)
     accountListbox.bind("<<ListboxSelect>>", on_account_select)
+    accountListbox.media_map = {}
 
     refreshButton = Button(
         trackedTitleFrame,
@@ -143,3 +183,19 @@ def open_profile_window(profile_name):
     accountTitleLabel.grid(row=2, column=1)
     accountListbox.grid(row=3, column=1, columnspan=23, padx=10, sticky="snew")
     refreshButton.grid(row=4, column=1, pady=10)
+
+    exportButton = Button(
+        trackedTitleFrame,
+        text="Export Data",
+        command=lambda: export_tracked_titles(profile_name)
+    )
+    
+    exportButton.grid(row=4, column=2, pady=10)
+
+    def on_close():
+        profile_window.destroy()
+        profile_window.master.deiconify()  
+
+    profile_window.protocol("WM_DELETE_WINDOW", lambda: on_close())
+
+    load_titles(profile_name)
