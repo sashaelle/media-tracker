@@ -28,25 +28,46 @@ def get_tracked_titles(profile):
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT title
-        FROM tracker   
-        WHERE profile = ?
-        ORDER BY title
+        SELECT 
+            t.title,
+            n.release_year,
+            t.status,
+            t.media_id
+        FROM tracker t
+        JOIN netflix n ON t.media_id = n.show_id
+        WHERE t.profile = ?
     """, (profile,))
 
     rows = cursor.fetchall()
     conn.close()
-    return [row[0] for row in rows]
 
-def modify_tracked_title(profile, title):
+    return [
+        {
+            "title": row[0],
+            "release_year": row[1],
+            "status": row[2],
+            "media_id": row[3]
+        }
+        for row in rows
+    ]
+
+def modify_tracked_title(profile, media_id):
     conn = sql.connect('media_tracker.db')
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT media_id, title, status, rating, review, media_type
-        FROM tracker
-        WHERE profile = ? AND title = ?
-    """, (profile, title))
+        SELECT 
+            t.media_id,
+            t.title,
+            n.release_year,
+            t.status,
+            t.rating,
+            t.review,
+            t.media_type
+        FROM tracker t
+        JOIN netflix n ON t.media_id = n.show_id
+        WHERE t.profile = ? AND t.media_id = ?
+    """, (profile, media_id))
 
     row = cursor.fetchone()
     conn.close()
@@ -57,8 +78,9 @@ def modify_tracked_title(profile, title):
     return {
         "media_id": row[0],
         "title": row[1],
-        "status": row[2],
-        "rating": row[3],
-        "review": row[4],
-        "media_type": row[5]
+        "release_year": row[2],
+        "status": row[3],
+        "rating": row[4],
+        "review": row[5],
+        "media_type": row[6]
     }

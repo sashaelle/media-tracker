@@ -59,7 +59,8 @@ def profile_form():
 
 
 def validate_profile(profile_name, form_window):
-    if not profile_name.strip():
+    profile_name = profile_name.strip()
+    if not profile_name:
         messagebox.showwarning("Error", "This field is required!")
         return
 
