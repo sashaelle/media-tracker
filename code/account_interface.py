@@ -36,7 +36,6 @@ def create_profile(profile_name):
 
 
 def select_profile(profile_name):
-    currentProfileLabel.config(text=f"Current Profile: {profile_name}")
     root.withdraw()
     open_profile_window(profile_name)
 
@@ -96,9 +95,6 @@ createProfileBtn = Button(
     background="lightgrey"
 )
 createProfileBtn.grid(row=1, column=0, padx=12)
-
-currentProfileLabel = Label(root, text="No profile selected")
-currentProfileLabel.pack(pady=10)
 
 for profile_name in saved_profiles:
     add_profile_button(profile_name)
