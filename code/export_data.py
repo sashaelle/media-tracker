@@ -29,10 +29,10 @@ def export_tracked_titles(profile):
         ORDER BY title
     """, (profile,))
 
-    rows = cursor.fetchall()
+    tracked_titles = cursor.fetchall()
     conn.close()
 
-    if not rows:
+    if not tracked_titles:
         messagebox.showwarning("No Data", "No tracked titles to export.")
         return
 
@@ -49,6 +49,6 @@ def export_tracked_titles(profile):
             "Date Added"
         ])
 
-        writer.writerows(rows)
+        writer.writerows(tracked_titles)
 
     messagebox.showinfo("Export Complete", f"Exported to:\n{file_path}")
