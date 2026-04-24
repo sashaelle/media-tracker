@@ -13,7 +13,7 @@ def open_profile_window(profile_name):
     profile_window.geometry("1000x900")
 
     #Welcome Header
-    welcomeLabel = Label(profile_window, text=f"Welcome, {profile_name}!")
+    welcomeLabel = Label(profile_window, text=f"Welcome, {profile_name}!", font=("Arial", 24, "bold"))
     welcomeLabel.pack(padx=10,pady=10,anchor="center")
 
     #--------------------------------------------------Search Feature Frame--------------------------------------------------------#
@@ -136,7 +136,7 @@ def open_profile_window(profile_name):
             entry = modify_tracked_title(profile_name, selected_media_id)
 
             if entry:
-                profile_window.withdraw()  # 👈 hide profile/search window
+                profile_window.withdraw() 
 
                 title_window = open_title_window(
                     entry["title"],
@@ -152,6 +152,8 @@ def open_profile_window(profile_name):
 
                 profile_window.deiconify()  
                 load_titles(profile_name)  
+    
+    statusSortVar = StringVar(value="All")
 
     def load_titles(profile):
         accountListbox.media_map.clear()
@@ -159,38 +161,48 @@ def open_profile_window(profile_name):
 
         titles = get_tracked_titles(profile)
 
+        selected_status = statusSortVar.get()
+
+        if selected_status != "All":
+            titles = [t for t in titles if t["status"] == selected_status]
+
         for i, row in enumerate(titles):
             display = f"{row['title']} ({row['release_year']}) - {row['status']}"
             accountListbox.insert(END, display)
             accountListbox.media_map[i] = row["media_id"]
 
-    trackedTitleFrame = Frame(profile_window, width=1000, height=100)
+    trackedTitleFrame = Frame(profile_window)
+    trackedTitleFrame.pack(padx=10, pady=10)
 
-    accountTitleLabel = Label(trackedTitleFrame, text="Your Tracked Titles:")
+    centerFrame = Frame(trackedTitleFrame)
 
-    accountListbox = Listbox(trackedTitleFrame, height=10, width=100)
+    accountTitleLabel = Label(centerFrame, text="Your Tracked Titles:")
+
+    statusSortCombo = Combobox(
+        centerFrame,
+        textvariable=statusSortVar,
+        state="readonly",
+        values=["All", "Not Watched", "Watching", "Want to Watch", "Watched"],
+        width=15
+    )
+
+    accountListbox = Listbox(centerFrame, height=10, width=100)
+
+    trackedTitleFrame.pack(padx=10, pady=10)
+    centerFrame.pack()
+    accountTitleLabel.grid(row=0, column=0, sticky="w")
+    statusSortCombo.grid(row=0, column=1, sticky="e")
+    accountListbox.grid(row=1, column=0, columnspan=2, pady=10)
+
     accountListbox.bind("<<ListboxSelect>>", on_account_select)
     accountListbox.media_map = {}
 
-    refreshButton = Button(
-        trackedTitleFrame,
-        text="Refresh",
-        command=lambda: load_titles(profile_name)
-    )
-
-    trackedTitleFrame.pack(padx=10, pady=10, anchor="center")
-
-    accountTitleLabel.grid(row=2, column=1)
-    accountListbox.grid(row=3, column=1, columnspan=23, padx=10, sticky="snew")
-    refreshButton.grid(row=4, column=1, pady=10)
-
     exportButton = Button(
-        trackedTitleFrame,
+        centerFrame,
         text="Export Data",
         command=lambda: export_tracked_titles(profile_name)
     )
-    
-    exportButton.grid(row=4, column=2, pady=10)
+    exportButton.grid(row=2, column=0, columnspan=2, pady=10)
 
     def on_close():
         profile_window.destroy()
