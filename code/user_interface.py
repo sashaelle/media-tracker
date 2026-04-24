@@ -185,6 +185,7 @@ def open_profile_window(profile_name):
         values=["All", "Not Watched", "Watching", "Want to Watch", "Watched"],
         width=15
     )
+    statusSortCombo.bind("<<ComboboxSelected>>", lambda e: load_titles(profile_name))
 
     accountListbox = Listbox(centerFrame, height=10, width=100)
 
