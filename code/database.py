@@ -1,8 +1,25 @@
+"""
+File: database.py
+Project: Personal Media Tracker
+Author(s): Sasha Crawford
+
+Description: Provides database creation.
+"""
+
 import sqlite3 as sql
 import pandas as pd
 
-#this is a comment
+"""
+Function name: netflix_table()
+Purpose: Creates the Netflix table in the database.
+Args:
+    None
+Returns:
+    None
 
+@pre: The database connection must be established.
+@post: The Netflix table is created (if it didn't exist).
+"""
 def netflix_table():
     #In this cell, we load the data.
     try:
@@ -23,6 +40,17 @@ def netflix_table():
         print("""Table already exists or another ValueError occurred.""")
         return None
 
+"""
+Function name: tracker_table()
+Purpose: Creates the tracker table in the database.
+Args:
+    None
+Returns:
+    None
+
+@pre: The database connection must be established.
+@post: The tracker table is created (if it didn't exist).
+"""
 def tracker_table():
     #In this cell, we create a table to track the media that we have watched.
     try:
@@ -51,6 +79,17 @@ def tracker_table():
     except ValueError:
         print("""Table already exists or another ValueError occurred.""")
 
+"""
+Function name: account_table()
+Purpose: Creates the accounts table in the database.
+Args:
+    None
+Returns:
+    None
+
+@pre: The database connection must be established.
+@post: The accounts table is created (if it didn't exist).
+"""
 def account_table():
     try:
         print("Creating accounts table if it doesn't exist...")
@@ -75,4 +114,6 @@ netflix_table() # load the data into the database
 tracker_table() # create the tracker table if it doesn't exist
 account_table() # create the accounts table if it doesn't exist
 
+# print a message to indicate that the data has been loaded 
+#   and the tracker table has been created (if it didn't exist).
 print("Data loaded and tracker table created (if it didn't exist).")
