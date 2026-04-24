@@ -38,5 +38,63 @@ def get_tracked_titles(profile):
     conn.close()
     return [row[0] for row in rows]
 
+<<<<<<< Updated upstream
 def modify_tracked_title(): 
     return 0
+=======
+    return [
+        {
+            "title": row[0],
+            "release_year": row[1],
+            "status": row[2],
+            "media_id": row[3]
+        }
+        for row in rows
+    ]
+
+def modify_tracked_title(profile, media_id):
+    conn = sql.connect('media_tracker.db')
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT 
+            t.media_id,
+            t.title,
+            n.release_year,
+            t.status,
+            t.rating,
+            t.review,
+            t.media_type
+        FROM tracker t
+        JOIN netflix n ON t.media_id = n.show_id
+        WHERE t.profile = ? AND t.media_id = ?
+    """, (profile, media_id))
+
+    row = cursor.fetchone()
+    conn.close()
+
+    if row is None:
+        return None
+
+    return {
+        "media_id": row[0],
+        "title": row[1],
+        "release_year": row[2],
+        "status": row[3],
+        "rating": row[4],
+        "review": row[5],
+        "media_type": row[6]
+    }
+
+def delete_tracked_title(profile, media_id):
+    conn = sql.connect("media_tracker.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        DELETE FROM tracker
+        WHERE profile = ? AND media_id = ?
+    """, (profile, media_id))
+
+    conn.commit()
+    conn.close()
+>>>>>>> Stashed changes

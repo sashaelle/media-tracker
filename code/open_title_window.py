@@ -1,8 +1,22 @@
 from tkinter import *
 from tkinter.ttk import Combobox
+<<<<<<< Updated upstream
 from tracked_title import track_title
     
 def open_title_window(title, release_year, media_id, profile_window, profile_name, media_type):                
+=======
+from tkinter import messagebox
+from tracked_title import track_title, delete_tracked_title
+
+def open_title_window(title, 
+                      release_year, 
+                      media_id, 
+                      profile_window, 
+                      profile_name, 
+                      media_type, 
+                      existing_entry=None):   
+                 
+>>>>>>> Stashed changes
     title_window = Toplevel(profile_window)
     title_window.title("Title Details")
     title_window.geometry("1000x900")
@@ -133,15 +147,43 @@ def open_title_window(title, release_year, media_id, profile_window, profile_nam
         track_title(profile_name, media_id, title, status, rating, review, media_type)
 
         print("Saved everything to database!")
+<<<<<<< Updated upstream
+=======
+        title_window.destroy() # Close the title details window after saving the entry
+
+    def delete_entry():
+        confirm = messagebox.askyesno(
+            "Confirm Delete",
+            f"Delete '{title}'?"
+        )
+
+        if confirm:
+            delete_tracked_title(profile_name, media_id)
+            messagebox.showinfo("Deleted", f"'{title}' was deleted.")
+            print("Deleted tracked title from database!")
+            title_window.destroy()
+>>>>>>> Stashed changes
  
 
     #Positioning the widgets inside Rating Frame
     reviewLabel.grid(row=0, column=0, padx=10)
     reviewTextField.grid(row=1, column=0, padx=10)
+<<<<<<< Updated upstream
     submitButton = Button(reviewFrame, text="Save Entry", command=save_entry)
     submitButton.grid(row=2, column=0, padx=10)
         
     
+=======
+
+    buttonFrame = Frame(reviewFrame)
+    buttonFrame.grid(row=2, column=0, pady=10)
+
+    submitButton = Button(buttonFrame, text="Save Entry", command=save_entry)
+    submitButton.pack(side="left", padx=5)
+
+    deleteButton = Button(buttonFrame, text="Delete Entry", command=delete_entry)
+    deleteButton.pack(side="left", padx=5)
+>>>>>>> Stashed changes
 
     #Rating variable and function
     count = 0
