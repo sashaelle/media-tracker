@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter.ttk import Combobox
-from tracked_title import get_tracked_titles
+from tracked_title import get_tracked_titles, modify_tracked_title
 from sort_filter import get_filtered_media
 from open_title_window import open_title_window
 
@@ -114,9 +114,21 @@ def open_profile_window(profile_name):
 
         if selection:
             index = selection[0]
-            data = widget.get(index)
+            selected_title = widget.get(index)
 
-            print(f"You selected {profile_name}: {data}")
+            print(f"You selected {profile_name}: {selected_title}")
+
+            entry = modify_tracked_title(profile_name, selected_title)
+
+            if entry:
+                open_title_window(
+                    entry["title"],
+                    entry["media_id"],
+                    profile_window,
+                    profile_name,
+                    entry["media_type"],
+                    entry   # 🔥 THIS is the key
+                )
 
     def load_titles(profile):
         tracked_titles = get_tracked_titles(profile)

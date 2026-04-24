@@ -2,7 +2,14 @@ from tkinter import *
 from tkinter.ttk import Combobox
 from tracked_title import track_title
     
-def open_title_window(title, release_year, media_id, profile_window, profile_name, media_type):                
+def open_title_window(title, 
+                      release_year, 
+                      media_id, 
+                      profile_window, 
+                      profile_name, 
+                      media_type, 
+                      existing_entry=None):   
+                 
     title_window = Toplevel(profile_window)
     title_window.title("Title Details")
     title_window.geometry("1000x900")
@@ -25,7 +32,13 @@ def open_title_window(title, release_year, media_id, profile_window, profile_nam
     trackingFrame.grid_propagate(False)
 
     trackingComboBoxVar = StringVar()
-    trackingComboBoxVar.set("Not Watched")
+
+    # If there is an existing entry for this title, set the tracking status to the existing status. 
+    # Otherwise, set it to "Not Watched"
+    if existing_entry and existing_entry["status"]:
+        trackingComboBoxVar.set(existing_entry["status"])
+    else:
+        trackingComboBoxVar.set("Not Watched")
 
     def update_tracking_status(event):
         selected_status = trackingComboBoxVar.get()
@@ -50,7 +63,13 @@ def open_title_window(title, release_year, media_id, profile_window, profile_nam
 
     # Saved value for rating
     saved_rating = StringVar(ratingFrame, "1")
-    saved_rating.set("0")
+
+    # If there is an existing entry for this title, set the rating to the existing rating.
+    # Otherwise, set it to "0" (which will be displayed as "Unrated")
+    if existing_entry and existing_entry["rating"] is not None:
+        saved_rating.set(str(existing_entry["rating"]))
+    else:
+        saved_rating.set("0")
 
     #Function to set the rating when a button is clicked
     def set_rating(rating):
@@ -101,7 +120,10 @@ def open_title_window(title, release_year, media_id, profile_window, profile_nam
     #Widgets for review frame
     reviewLabel = Label(reviewFrame, text="Review:", font=("Arial", 12))
     reviewTextField = Text(reviewFrame, width=50, height=10)
-    reviewTextField.insert("1.0", placeholder)
+
+    # If there is an existing entry for this title, insert the existing review into the text field.
+    if existing_entry and existing_entry["review"]:
+        reviewTextField.insert("1.0", existing_entry["review"])
 
 
     #Function to clear the default text when the text field is clicked

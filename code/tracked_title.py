@@ -29,7 +29,7 @@ def get_tracked_titles(profile):
 
     cursor.execute("""
         SELECT title
-        FROM tracker
+        FROM tracker   
         WHERE profile = ?
         ORDER BY title
     """, (profile,))
@@ -38,5 +38,27 @@ def get_tracked_titles(profile):
     conn.close()
     return [row[0] for row in rows]
 
-def modify_tracked_title(): 
-    return 0
+def modify_tracked_title(profile, title):
+    conn = sql.connect('media_tracker.db')
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT media_id, title, status, rating, review, media_type
+        FROM tracker
+        WHERE profile = ? AND title = ?
+    """, (profile, title))
+
+    row = cursor.fetchone()
+    conn.close()
+
+    if row is None:
+        return None
+
+    return {
+        "media_id": row[0],
+        "title": row[1],
+        "status": row[2],
+        "rating": row[3],
+        "review": row[4],
+        "media_type": row[5]
+    }
