@@ -1,17 +1,18 @@
 from tkinter import *
 from tkinter import messagebox
-from save_profile import save_profile
+from save_profile import save_profile, get_profiles
 from user_interface import open_profile_window
 
 root = Tk()
 root.title("Personal Media Tracker")
 
 profiles = []
+saved_profiles = get_profiles()
 MAX_PROFILES = 4
 
 
 # --------------------------- Profile Functions --------------------------- #
-def create_profile(profile_name):
+def add_profile_button(profile_name):
     profiles.append(profile_name)
 
     new_button = Button(
@@ -25,14 +26,18 @@ def create_profile(profile_name):
 
     col_position = len(profiles)
     new_button.grid(row=1, column=col_position, padx=12)
-    save_profile(profile_name)
 
     if len(profiles) == MAX_PROFILES:
         createProfileBtn.destroy()
 
+def create_profile(profile_name):
+    add_profile_button(profile_name)
+    save_profile(profile_name)
+
 
 def select_profile(profile_name):
     currentProfileLabel.config(text=f"Current Profile: {profile_name}")
+    root.withdraw()
     open_profile_window(profile_name)
 
 
@@ -95,4 +100,7 @@ createProfileBtn.grid(row=1, column=0, padx=12)
 currentProfileLabel = Label(root, text="No profile selected")
 currentProfileLabel.pack(pady=10)
 
+for profile_name in saved_profiles:
+    add_profile_button(profile_name)
+    
 root.mainloop()

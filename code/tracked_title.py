@@ -1,15 +1,18 @@
 import sqlite3 as sql
 import uuid
+from datetime import date
 
 def track_title(profile, media_id, title, status, rating, review, media_type):
     conn = sql.connect('media_tracker.db')
     cursor = conn.cursor()
 
     new_uuid = str(uuid.uuid4())
+    date_added = date.today().isoformat()
 
     tracked = """
-    INSERT INTO tracker (tracker_id, profile, media_id, title, status, rating, review, media_type)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO tracker (
+        tracker_id, profile, media_id, title, status, rating, review, media_type, date_added)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT (profile, media_id)
     DO UPDATE SET
         status=excluded.status,
@@ -17,7 +20,9 @@ def track_title(profile, media_id, title, status, rating, review, media_type):
         review=excluded.review
     """
 
-    entry_data = (new_uuid, profile, media_id, title, status, rating, review, media_type)
+    entry_data = (
+        new_uuid, profile, media_id, title, status, rating, review, media_type, date_added
+    )
 
     cursor.execute(tracked, entry_data)
     conn.commit()

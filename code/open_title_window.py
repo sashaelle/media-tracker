@@ -155,6 +155,7 @@ def open_title_window(title,
         track_title(profile_name, media_id, title, status, rating, review, media_type)
 
         print("Saved everything to database!")
+        title_window.destroy() # Close the title details window after saving the entry
  
 
     #Positioning the widgets inside Rating Frame
@@ -162,19 +163,5 @@ def open_title_window(title,
     reviewTextField.grid(row=1, column=0, padx=10)
     submitButton = Button(reviewFrame, text="Save Entry", command=save_entry)
     submitButton.grid(row=2, column=0, padx=10)
-        
-    
 
-    #Rating variable and function
-    count = 0
-    ans = StringVar(ratingFrame)
-    ans.set("Unrated")
-    increments = 0
-
-        
-def increment_count(x):
-    global count,increments,ans
-    count += x
-    increments+=1
-    ans.set(str(count/increments))
-    return ans
+    return title_window
