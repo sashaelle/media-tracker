@@ -1,15 +1,18 @@
 import sqlite3 as sql
 import uuid
+from datetime import date
 
 def track_title(profile, media_id, title, status, rating, review, media_type):
     conn = sql.connect('media_tracker.db')
     cursor = conn.cursor()
 
     new_uuid = str(uuid.uuid4())
+    date_added = date.today().isoformat()
 
     tracked = """
-    INSERT INTO tracker (tracker_id, profile, media_id, title, status, rating, review, media_type)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO tracker (
+        tracker_id, profile, media_id, title, status, rating, review, media_type, date_added)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT (profile, media_id)
     DO UPDATE SET
         status=excluded.status,
@@ -17,7 +20,9 @@ def track_title(profile, media_id, title, status, rating, review, media_type):
         review=excluded.review
     """
 
-    entry_data = (new_uuid, profile, media_id, title, status, rating, review, media_type)
+    entry_data = (
+        new_uuid, profile, media_id, title, status, rating, review, media_type, date_added
+    )
 
     cursor.execute(tracked, entry_data)
     conn.commit()
@@ -28,20 +33,26 @@ def get_tracked_titles(profile):
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT title
-        FROM tracker
-        WHERE profile = ?
-        ORDER BY title
+        SELECT 
+            t.title,
+            n.release_year,
+            t.status,
+            t.media_id
+        FROM tracker t
+        JOIN netflix n ON t.media_id = n.show_id
+        WHERE t.profile = ?
     """, (profile,))
 
     rows = cursor.fetchall()
     conn.close()
-    return [row[0] for row in rows]
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 def modify_tracked_title(): 
     return 0
 =======
+=======
+>>>>>>> 18c7fc43475a6189860392df56282a3de404eeea
     return [
         {
             "title": row[0],
@@ -84,6 +95,7 @@ def modify_tracked_title(profile, media_id):
         "rating": row[4],
         "review": row[5],
         "media_type": row[6]
+<<<<<<< HEAD
     }
 
 def delete_tracked_title(profile, media_id):
@@ -98,3 +110,6 @@ def delete_tracked_title(profile, media_id):
     conn.commit()
     conn.close()
 >>>>>>> Stashed changes
+=======
+    }
+>>>>>>> 18c7fc43475a6189860392df56282a3de404eeea
