@@ -1,178 +1,122 @@
 from tkinter import *
 from tkinter.ttk import Combobox
-<<<<<<< Updated upstream
-from tracked_title import track_title
-    
-<<<<<<< HEAD
-def open_title_window(title, release_year, media_id, profile_window, profile_name, media_type):                
-=======
 from tkinter import messagebox
 from tracked_title import track_title, delete_tracked_title
 
-=======
->>>>>>> 18c7fc43475a6189860392df56282a3de404eeea
-def open_title_window(title, 
-                      release_year, 
-                      media_id, 
-                      profile_window, 
-                      profile_name, 
-                      media_type, 
-                      existing_entry=None):   
-                 
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> 18c7fc43475a6189860392df56282a3de404eeea
+def open_title_window(
+    title,
+    release_year,
+    media_id,
+    profile_window,
+    profile_name,
+    media_type,
+    existing_entry=None
+):
+
     title_window = Toplevel(profile_window)
     title_window.title("Title Details")
     title_window.geometry("1000x900")
 
-    #--------------------------------------------------Header Frame----------------------------------------------------------#
+    # ---------------- Header ---------------- #
     headerFrame = Frame(title_window, width=1000, height=100)
     headerFrame.grid(row=0, column=0, padx=10, pady=10)
     headerFrame.grid_propagate(False)
 
-    titleLabel = Label(headerFrame, text=f'Title: {title}', font=("Arial", 16))
-    release_yearLabel = Label(headerFrame, text=f'Release Year: {release_year}', font=("Arial", 12))
-    titleLabel.grid(row=0, column=0, padx=10)
-    release_yearLabel.grid(row=1, column=0, padx=10)
+    Label(headerFrame, text=f"Title: {title}", font=("Arial", 16)).grid(row=0, column=0, padx=10)
+    Label(headerFrame, text=f"Release Year: {release_year}", font=("Arial", 12)).grid(row=1, column=0, padx=10)
 
-                     
-    #--------------------------------------------------Track Feature Frame----------------------------------------------------------#
-
+    # ---------------- Tracking ---------------- #
     trackingFrame = Frame(title_window, width=1000, height=100)
     trackingFrame.grid(row=1, column=0, padx=10, pady=10)
     trackingFrame.grid_propagate(False)
 
     trackingComboBoxVar = StringVar()
 
-    # If there is an existing entry for this title, set the tracking status to the existing status. 
-    # Otherwise, set it to "Not Watched"
     if existing_entry and existing_entry["status"]:
         trackingComboBoxVar.set(existing_entry["status"])
     else:
         trackingComboBoxVar.set("Not Watched")
 
-    def update_tracking_status(event):
-        selected_status = trackingComboBoxVar.get()
-        trackingComboBoxVar.set(selected_status)
-        print(f"Tracking status updated to: {selected_status}") #checking if the tracking status is being updated correctly
+    trackingOptionsList = ["Not Watched", "Watching", "Want to Watch", "Watched"]
 
-    trackingOptionsList = ["Not Watched","Watching", "Want to Watch", "Watched"]
-    trackingLabel = Label(trackingFrame, text="Tracking Status: ", font=("Arial", 12))
-    trackingComboBox = Combobox(trackingFrame, values=trackingOptionsList, textvariable=trackingComboBoxVar, state="readonly")
-    trackingComboBox.bind('<<ComboboxSelected>>', update_tracking_status)
+    Label(trackingFrame, text="Tracking Status:", font=("Arial", 12)).grid(row=1, column=0, padx=10)
 
-    #Positioning the widgets inside Tracking Frame
-    trackingLabel.grid(row=1, column=0, padx=10)
+    trackingComboBox = Combobox(
+        trackingFrame,
+        values=trackingOptionsList,
+        textvariable=trackingComboBoxVar,
+        state="readonly"
+    )
     trackingComboBox.grid(row=2, column=0, padx=10)
 
-
-        
-    #--------------------------------------------------Rating Feature Frame----------------------------------------------------------#
+    # ---------------- Rating ---------------- #
     ratingFrame = Frame(title_window, width=1000, height=100)
     ratingFrame.grid(row=2, column=0, padx=10, pady=1)
     ratingFrame.grid_propagate(False)
 
-    # Saved value for rating
-    saved_rating = StringVar(ratingFrame, "1")
+    saved_rating = StringVar(ratingFrame)
 
-    # If there is an existing entry for this title, set the rating to the existing rating.
-    # Otherwise, set it to "0" (which will be displayed as "Unrated")
     if existing_entry and existing_entry["rating"] is not None:
         saved_rating.set(str(existing_entry["rating"]))
     else:
         saved_rating.set("0")
 
-    #Function to set the rating when a button is clicked
-    def set_rating(rating):
-        saved_rating.set(rating)
-        print(f"Rating set to: {saved_rating.get()}") #checking if the rating is being set correctly
+    Label(ratingFrame, text="Rating:", font=("Arial", 12)).grid(row=0, column=0, padx=10)
 
-    #Rating widgets
-    ratingLabel = Label(ratingFrame, text="Rating: ", font=("Arial", 12))           
-    values = {"1 Star": "1", 
-              "2 Stars": "2", 
-              "3 Stars": "3", 
-              "4 Stars": "4", 
-              "5 Stars": "5"}
-    
-    for (text, value) in values.items():
-        Radiobutton(ratingFrame, 
-                    text = text, 
-                    variable = saved_rating, 
-                    value = value, 
-                    indicator = 0).grid(row=1, 
-                                        column=int(value)-1, 
-                                        padx=5)
-        
-    
-    #Positioning the widgets inside Rating Frame
-    ratingLabel.grid(row=0, column=0, padx=10)
-    
-    #--------------------------------------------Rating Description Feature Frame----------------------------------------------------#
+    values = {
+        "1 Star": "1",
+        "2 Stars": "2",
+        "3 Stars": "3",
+        "4 Stars": "4",
+        "5 Stars": "5"
+    }
+
+    for text, value in values.items():
+        Radiobutton(
+            ratingFrame,
+            text=text,
+            variable=saved_rating,
+            value=value,
+            indicator=0
+        ).grid(row=1, column=int(value) - 1, padx=5)
+
+    # ---------------- Rating Hint ---------------- #
     ratingDescriptionFrame = Frame(title_window, width=1000, height=100)
     ratingDescriptionFrame.grid(row=3, column=0, padx=10, pady=10)
     ratingDescriptionFrame.grid_propagate(False)
 
-    ratingDescriptionLabel = Label(ratingDescriptionFrame, text="(Hint: Scale of 1-5, with 1 being the lowest and 5 being the highest)")
-    ratingDescriptionLabel.grid(row=0, column=0, padx=10)
+    Label(
+        ratingDescriptionFrame,
+        text="(Scale of 1–5, 1 = lowest, 5 = highest)"
+    ).grid(row=0, column=0, padx=10)
 
-    #--------------------------------------------------Review Feature Frame----------------------------------------------------------#
+    # ---------------- Review ---------------- #
     reviewFrame = Frame(title_window, width=1000, height=400)
     reviewFrame.grid(row=4, column=0, padx=10, pady=10)
     reviewFrame.grid_propagate(False)
 
-    #Saved user input for review
-    saved_review = StringVar()
-    saved_review.set("")
+    Label(reviewFrame, text="Review:", font=("Arial", 12)).grid(row=0, column=0, padx=10)
 
-    #Default text for review text field
-    placeholder = "Write your review here..."
-
-    #Widgets for review frame
-    reviewLabel = Label(reviewFrame, text="Review:", font=("Arial", 12))
     reviewTextField = Text(reviewFrame, width=50, height=10)
+    reviewTextField.grid(row=1, column=0, padx=10)
 
-    # If there is an existing entry for this title, insert the existing review into the text field.
     if existing_entry and existing_entry["review"]:
         reviewTextField.insert("1.0", existing_entry["review"])
+    else:
+        reviewTextField.insert("1.0", "Write your review here...")
 
-
-    #Function to clear the default text when the text field is clicked
-    def on_focus_in(event):
-        if reviewTextField.get("1.0", "end-1c") == placeholder:
-            reviewTextField.delete("1.0", "end")
-
-    #Function to return the default text if the user clicks out of the text field without writing a review
-    def on_focus_out(event):
-        if reviewTextField.get("1.0", "end-1c").strip() == "":
-            reviewTextField.insert("1.0", placeholder)
-
-    #Calling the functions to clear and return the placeholder text
-    reviewTextField.bind("<FocusIn>", on_focus_in)
-    reviewTextField.bind("<FocusOut>", on_focus_out)
-
-
-    #Function to save all the user input from the title details window and save it to the account specific tracker database
+    # ---------------- Save ---------------- #
     def save_entry():
-        # Get review text
         review = reviewTextField.get("1.0", END).strip()
-        saved_review.set(review)
-
-        # Get other values
         status = trackingComboBoxVar.get()
         rating = saved_rating.get()
 
-        # Save to database
         track_title(profile_name, media_id, title, status, rating, review, media_type)
 
-        print("Saved everything to database!")
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-        title_window.destroy() # Close the title details window after saving the entry
+        print("Saved!")
+        title_window.destroy()
 
+    # ---------------- Delete ---------------- #
     def delete_entry():
         confirm = messagebox.askyesno(
             "Confirm Delete",
@@ -182,35 +126,13 @@ def open_title_window(title,
         if confirm:
             delete_tracked_title(profile_name, media_id)
             messagebox.showinfo("Deleted", f"'{title}' was deleted.")
-            print("Deleted tracked title from database!")
             title_window.destroy()
->>>>>>> Stashed changes
-=======
-        title_window.destroy() # Close the title details window after saving the entry
->>>>>>> 18c7fc43475a6189860392df56282a3de404eeea
- 
 
-    #Positioning the widgets inside Rating Frame
-    reviewLabel.grid(row=0, column=0, padx=10)
-    reviewTextField.grid(row=1, column=0, padx=10)
-<<<<<<< Updated upstream
-    submitButton = Button(reviewFrame, text="Save Entry", command=save_entry)
-    submitButton.grid(row=2, column=0, padx=10)
-<<<<<<< HEAD
-        
-    
-=======
-
+    # ---------------- Buttons ---------------- #
     buttonFrame = Frame(reviewFrame)
     buttonFrame.grid(row=2, column=0, pady=10)
 
-    submitButton = Button(buttonFrame, text="Save Entry", command=save_entry)
-    submitButton.pack(side="left", padx=5)
-
-    deleteButton = Button(buttonFrame, text="Delete Entry", command=delete_entry)
-    deleteButton.pack(side="left", padx=5)
->>>>>>> Stashed changes
-=======
->>>>>>> 18c7fc43475a6189860392df56282a3de404eeea
+    Button(buttonFrame, text="Save Entry", command=save_entry).pack(side="left", padx=5)
+    Button(buttonFrame, text="Delete Entry", command=delete_entry).pack(side="left", padx=5)
 
     return title_window
