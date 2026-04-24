@@ -22,7 +22,8 @@ def export_tracked_titles(profile):
             media_type,
             status,
             rating,
-            review
+            review,
+            date_added
         FROM tracker
         WHERE profile = ?
         ORDER BY title
@@ -30,6 +31,10 @@ def export_tracked_titles(profile):
 
     rows = cursor.fetchall()
     conn.close()
+
+    if not rows:
+        messagebox.showwarning("No Data", "No tracked titles to export.")
+        return
 
     with open(file_path, "w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
@@ -40,9 +45,10 @@ def export_tracked_titles(profile):
             "Media Type",
             "Status",
             "Rating",
-            "Review"
+            "Review",
+            "Date Added"
         ])
 
         writer.writerows(rows)
 
-    messagebox.showinfo("Export Complete", "Your tracked titles were exported successfully.")
+    messagebox.showinfo("Export Complete", f"Exported to:\n{file_path}")

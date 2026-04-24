@@ -184,8 +184,6 @@ def open_profile_window(profile_name):
     accountListbox.grid(row=3, column=1, columnspan=23, padx=10, sticky="snew")
     refreshButton.grid(row=4, column=1, pady=10)
 
-    load_titles(profile_name)
-
     exportButton = Button(
         trackedTitleFrame,
         text="Export Data",
@@ -199,3 +197,5 @@ def open_profile_window(profile_name):
         profile_window.master.deiconify()  
 
     profile_window.protocol("WM_DELETE_WINDOW", lambda: on_close())
+
+    load_titles(profile_name)
