@@ -54,14 +54,14 @@ To track a title:
 
 If the user wants to insert their opinion, PMT provides a numerical rating scale and text-based responses.
 
-To rate a selected title in the `Title Details` window:
+To rate a selected title:
 1. Open to PMT and select your profile
 2. Search and select your desired title
 3. Navigate under the Watch Status feature
 4. Click a button between 1 (lowest) and 5 (highest) to rate the title
 5. Select `Save Entry` to save all selections to the database
 
-To review a selected title in the `Title Details` window:
+To review a selected title:
 1. Open to PMT and select your profile
 2. Search and select your desired title
 3. Naviagte under the Rating feature
