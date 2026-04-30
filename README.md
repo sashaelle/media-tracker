@@ -42,7 +42,7 @@ To create a profile:
 
 ### Tracking a Title (Jessa)
 
-To track progress with media titles, PMT offers a watch status dropdown selection including: Not Watched, Watching, and Want to Watch.  
+To track progress with media titles, PMT offers a watch status dropdown selection.
 
 To track a title:
 1. Open to PMT and select your profile
